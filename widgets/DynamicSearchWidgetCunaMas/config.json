@@ -1,0 +1,165 @@
+{
+  "groups": [
+    {
+      "name": "ubicaCiai",
+      "label": "Cuna\nMás\nUbica",
+      "description": "Herramienta de geolocalización",
+      "index": 0,
+      "logo": "./widgets/DynamicSearchWidgetCunaMas/images/logo_ciai.png",
+      "color": "#009dee",
+      "layersForm": {
+        "visible": true,
+        "layers": [
+          {
+            "index": 0,
+            "name": "CIAI",
+            "label": "CIAI",
+            "layersId": [
+              "cobertura_servicios_local_ciai_dev_654"
+            ],
+            "selected": true,
+            "id": "CIAI0"
+          },
+          {
+            "index": 1,
+            "name": "SA",
+            "label": "SA",
+            "layersId": [
+              "cobertura_servicios_local_sa_dev_8669"
+            ],
+            "selected": false,
+            "id": "SA1"
+          },
+          {
+            "index": 2,
+            "name": "CIAISA",
+            "label": "CIAI / SA",
+            "layersId": [
+              "cobertura_servicios_local_ciai_dev_654",
+              "cobertura_servicios_local_sa_dev_8669"
+            ],
+            "selected": false,
+            "id": "CIAISA2"
+          }
+        ]
+      },
+      "filters": [
+        {
+          "codeField": "iddep",
+          "nameField": "departamento",
+          "label": "Departamento",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 0,
+          "filterAffected": [
+            1
+          ],
+          "firstOption": "Seleccione el Departamento",
+          "startupData": true,
+          "isZoom": true
+        },
+        {
+          "codeField": "idprov",
+          "nameField": "provincia",
+          "label": "Provincia",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 1,
+          "filterAffected": [
+            2
+          ],
+          "firstOption": "Seleccione la Provincia",
+          "startupData": false,
+          "isZoom": true
+        },
+        {
+          "codeField": "ubigeo",
+          "nameField": "distrito",
+          "label": "Distrito",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 2,
+          "filterAffected": [
+            3
+          ],
+          "firstOption": "Seleccione el Distrito",
+          "startupData": false,
+          "isZoom": true
+        },
+        {
+          "codeField": "idccpp",
+          "nameField": "centro_poblado",
+          "label": "Centro poblado",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 3,
+          "filterAffected": [],
+          "firstOption": "Seleccione el Centro Poblado",
+          "startupData": false,
+          "isZoom": true
+        }
+      ]
+    },
+    {
+      "name": "ubicaSaf",
+      "label": "Cuna\nMás\nUbica",
+      "description": "Herramienta de geolocalización",
+      "index": 1,
+      "logo": "./widgets/DynamicSearchWidgetCunaMas/images/logo_saf.png",
+      "color": "#ff007d",
+      "filters": [
+        {
+          "codeField": "iddep",
+          "nameField": "departamento",
+          "label": "Departamento",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 0,
+          "filterAffected": [
+            1
+          ],
+          "firstOption": "Seleccione el Departamento",
+          "startupData": true
+        },
+        {
+          "codeField": "idprov",
+          "nameField": "provincia",
+          "label": "Provincia",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 1,
+          "filterAffected": [
+            2
+          ],
+          "firstOption": "Seleccione la Provincia",
+          "startupData": false
+        },
+        {
+          "codeField": "ubigeo",
+          "nameField": "distrito",
+          "label": "Distrito",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 2,
+          "filterAffected": [
+            3
+          ],
+          "firstOption": "Seleccione el Distrito",
+          "startupData": false
+        },
+        {
+          "codeField": "idccpp",
+          "nameField": "centro_poblado",
+          "label": "Centro poblado",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 3,
+          "filterAffected": [],
+          "firstOption": "Seleccione el Centro Poblado",
+          "startupData": false,
+          "isZoom": true
+        }
+      ]
+    }
+  ]
+}

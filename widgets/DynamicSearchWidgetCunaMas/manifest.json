@@ -1,0 +1,24 @@
+{
+  "name": "DynamicSearchWidgetCunaMas",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "0.0.1",
+  "wabVersion": "2.17",
+  "author": "danielgis",
+  "description": "El widget Cascading Filter Search permite realizar búsquedas espaciales a través de una serie de combos, donde cada selección filtra las opciones del siguiente combo de forma secuencial en cascada. Comenzando con un conjunto inicial de elementos, el widget genera dinámicamente opciones de filtrado adicionales según las selecciones del usuario, permitiendo búsquedas espaciales más precisas. Esta herramienta interactiva es ideal para aplicaciones que requieren filtros en múltiples niveles para delimitar datos geográficos específicos dentro de una interfaz de mapa.",
+  "copyright": "",
+  "license": "ISC",
+  "properties": {
+    "inPanel": true,
+    "hasLocale": true,
+    "hasStyle": true,
+    "hasConfig": true,
+    "hasUIFile": true,
+    "hasSettingPage": true,
+    "hasSettingUIFile": true,
+    "hasSettingLocale": true,
+    "hasSettingStyle": true,
+    "IsController": false
+  }
+}

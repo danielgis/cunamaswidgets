@@ -1,0 +1,26 @@
+{
+  "name": "DynamicSearchWidgetCunaMas",
+  "version": "1.0.0",
+  "description": "El widget Cascading Filter Search permite realizar búsquedas espaciales a través de una serie de combos, donde cada selección filtra las opciones del siguiente combo de forma secuencial en cascada. Comenzando con un conjunto inicial de elementos, el widget genera dinámicamente opciones de filtrado adicionales según las selecciones del usuario, permitiendo búsquedas espaciales más precisas. Esta herramienta interactiva es ideal para aplicaciones que requieren filtros en múltiples niveles para delimitar datos geográficos específicos dentro de una interfaz de mapa.",
+  "keywords": "",
+  "author": "danielgis",
+  "license": "ISC",
+  "scripts": {
+    "build": "esri-wab-build C:/danielgis/2024/proyectos/cunamas/actividades/visor/ArcGISWebAppBuilder/server/apps/2"
+  },
+  "devDependencies": {
+    "babel-core": "~6.26.3",
+    "babel-plugin-transform-es2015-modules-simple-amd": "^0.3.0",
+    "babel-preset-es2015-without-strict": "^0.0.4",
+    "babel-preset-stage-0": "^6.24.1",
+    "esri-wab-build": "^1.2.0",
+    "grunt": "^1.6.1",
+    "grunt-babel": "~7.0.0",
+    "grunt-contrib-clean": "^2.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-sass": "^3.1.0",
+    "grunt-sync": "^0.8.2",
+    "node-sass": "^9.0.0"
+  }
+}

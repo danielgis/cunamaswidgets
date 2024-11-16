@@ -1,0 +1,180 @@
+.dynamic-search-widget-cuna-mas {
+  font-family: 'Averta PE', sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+.dynamic-search-widget-cuna-mas h3 {
+  font-size: 1.2em;
+}
+
+.dynamic-search-widget-cuna-mas h3,
+p {
+  margin-top: 0;
+}
+
+.dynamic-search-widget-cuna-mas hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #b8b8b8;
+  margin: 1em 0;
+  padding: 0;
+}
+
+#_20_panel {
+  /* inset: 50px auto 0px 0px !important; */
+  border: none !important;
+}
+
+#dijit__WidgetBase_0 {
+  background-color: #f3f3f3 !important;
+  padding: 0 !important;
+}
+
+.containerGroupsClsCs {
+  display: none;
+}
+
+.containerGroupsClsCs.active {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#containerGridCs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.groupCs {
+  height: 160px;
+  width: auto;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.containerFiltersClsCs {
+  display: none
+}
+
+.containerFiltersClsCs.active {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.containerHeaderClsCs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+#containerLblSelectedCs {
+  width: 55%;
+  /* color: #009dee; */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+#containerImgSelectedCs {
+  width: 42%;
+}
+
+#nameSelectedCs {
+  font-size: 4em;
+  font-stretch: expanded;
+  line-height: 1em;
+}
+
+#descSelectedCs {
+  font-size: 1.3em;
+}
+
+#backButtonCs {
+  color: #0090f8;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  text-align: left;
+  height: 30px;
+}
+
+.ctnPaddingClsCs {
+  padding: 20px 30px 12px 30px;
+}
+
+#containerBackCs {
+  width: 100%;
+  background-color: #d7eaf7;
+  position: sticky;
+}
+
+.containerBackClsCs {
+  display: none;
+}
+
+.containerBackClsCs.active {
+  display: flex;
+}
+
+#containerBodyCs {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.labelComboBoxClsCs {
+  color: #535353;
+  margin-bottom: 8px;
+}
+
+
+.comboBoxClsCs {
+  width: 100%;
+  height: 25px;
+  border-color: #dbdbdb;
+  margin-bottom: 15px;
+}
+
+.radioContainerCs {
+  display: none;
+  width: 100%;
+  margin-top: 40px;
+  /* height: 80px; */
+  /* display: flex; */
+}
+
+.radioContainerCs.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.formRadioContainerCs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 95%;
+}
+
+.radioItemContainerCs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  text-align: center;
+}
+
+.radioItemContainerCs label,
+.radioItemContainerCs input {
+  margin: 0px 3px;
+}
+
+.radioItemContainerCs input {
+  cursor: pointer;
+}
