@@ -5,6 +5,8 @@ import WidgetManager from "jimu/WidgetManager"
 import QueryTask from "esri/tasks/QueryTask";
 import Query from "esri/tasks/query";
 import Deferred from "dojo/Deferred";
+import all from "dojo/promise/all";
+import BusyIndicator from 'esri/dijit/util/busyIndicator';
 // import StatisticDefinition from "esri/tasks/StatisticDefinition"
 
 const fontAwesome = document.createElement('script');
@@ -21,6 +23,7 @@ export default declare([BaseWidget], {
   baseClass: 'dynamic-search-widget-cuna-mas',
   groupSelected: null,
   urlLayerSelected: null,
+  whereDefault: '1=1',
 
   // add additional properties here
 
@@ -49,6 +52,10 @@ export default declare([BaseWidget], {
 
   startup() {
     this.inherited(arguments);
+    this.busyIndicator = BusyIndicator.create({
+      target: this.domNode.parentNode.parentNode,
+      backgroundOpacity: 0
+    });
   },
   onOpen() {
     this.buildMainMenuCs();
@@ -145,7 +152,7 @@ export default declare([BaseWidget], {
     });
   },
 
-  getDataByFilter(url, fields, where = "1=1", distinctValues = true) {
+  getDataByFilter(url, fields, where = this.whereDefault, distinctValues = true) {
     const deferred = new Deferred();
     const queryTask = new QueryTask(url);
     const query = new Query();
@@ -193,29 +200,44 @@ export default declare([BaseWidget], {
     this.radioContainerApCs.innerHTML = '';
   },
 
-  makeOptionCs(options, selectControl, valueField, labelField, firstOption) {
+  makeOptionCs(options, selectControl, valueField, labelField, firstOption, fixOptionSelected = true) {
+    let selectedValue = null;
+    if (fixOptionSelected) {
+      const selectedIndex = selectControl.selectedIndex;
+      if (selectedIndex > 0) {
+        selectedValue = selectControl.options[selectedIndex].value;
+      }
+    }
     selectControl.innerHTML = '';
     const defaultOption = document.createElement('option');
     defaultOption.text = firstOption;
     defaultOption.value = '';
     defaultOption.selected = true;
-    defaultOption.disabled = true;
+    // defaultOption.disabled = true;
     selectControl.appendChild(defaultOption);
     options.forEach(option => {
       const optionElement = document.createElement('option');
       optionElement.value = option.attributes[valueField];
       optionElement.innerHTML = option.attributes[labelField];
+      if (selectedValue && selectedValue === option.attributes[valueField]) {
+        optionElement.selected = true;
+      }
       selectControl.appendChild(optionElement);
     });
   },
 
   onChangeFilterCs(evt, currentFilterIndex) {
+    this.busyIndicator.show();
+    let where = this.manageWhere();
+    if (where === '') {
+      where = this.whereDefault;
+    }
     const selectedIndex = evt.target.selectedIndex;
     const selectedValue = evt.target.options[selectedIndex].value;
     const currentFilter = this.groupSelected.filters[currentFilterIndex];
 
     const fields = [currentFilter.codeField, currentFilter.nameField];
-    const where = `${currentFilter.codeField} = '${selectedValue}'`;
+    // const where = `${currentFilter.codeField} = '${selectedValue}'`;
 
     let responseFilter;
 
@@ -232,32 +254,50 @@ export default declare([BaseWidget], {
         return this.setExtentByFilter(url, where);
       })
       .then(() => {
-        if (!currentFilter.filterAffected) {
-          return;
-        }
-        currentFilter.filterAffected.forEach(affectedIndex => {
-          const affectedFilter = this.groupSelected.filters[affectedIndex];
-          const affectedSelect = document.getElementById(affectedFilter.codeField);
-          const urlFilter = this.urlLayerSelected || affectedFilter.url;
-          const fieldsFilter = [affectedFilter.codeField, affectedFilter.nameField];
-          const whereFilter = `${currentFilter.codeField} = '${selectedValue}'`;
-          this.getDataByFilter(urlFilter, fieldsFilter, whereFilter)
+        const promises = this.groupSelected.filters.map((filter, index) => {
+          const urlFilter = this.urlLayerSelected || filter.url;
+          const fieldsFilter = [filter.codeField, filter.nameField];
+          return this.getDataByFilter(urlFilter, fieldsFilter, where)
             .then(data => {
-              this.makeOptionCs(data.features, affectedSelect, affectedFilter.codeField, affectedFilter.nameField, affectedFilter.firstOption);
-            })
-            .then(() => {
-              let filterAffectedReset = affectedFilter.filterAffected;
-              while (filterAffectedReset.length > 0) {
-                filterAffectedReset = this.resetSelectIndexArray(filterAffectedReset);
-              }
-            })
-            .catch(err => {
-              console.error(`Error al actualizar el filtro ${affectedFilter.label}:`, err);
+              this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
             });
+          // }
         });
+        return all(promises);
+        // this.groupSelected.filters.forEach(filter => {
+        // makeOption by each filter
+
+        // });
+        //   if (!currentFilter.filterAffected) {
+        //     return;
+        //   }
+        //   currentFilter.filterAffected.forEach(affectedIndex => {
+        //     const affectedFilter = this.groupSelected.filters[affectedIndex];
+        //     const affectedSelect = document.getElementById(affectedFilter.codeField);
+        //     const urlFilter = this.urlLayerSelected || affectedFilter.url;
+        //     const fieldsFilter = [affectedFilter.codeField, affectedFilter.nameField];
+        //     const whereFilter = `${currentFilter.codeField} = '${selectedValue}'`;
+        //     this.getDataByFilter(urlFilter, fieldsFilter, whereFilter)
+        //       .then(data => {
+        //         this.makeOptionCs(data.features, affectedSelect, affectedFilter.codeField, affectedFilter.nameField, affectedFilter.firstOption);
+        //       })
+        //       .then(() => {
+        //         let filterAffectedReset = affectedFilter.filterAffected;
+        //         while (filterAffectedReset.length > 0) {
+        //           filterAffectedReset = this.resetSelectIndexArray(filterAffectedReset);
+        //         }
+        //       })
+        //       .catch(err => {
+        //         console.error(`Error al actualizar el filtro ${affectedFilter.label}:`, err);
+        //       });
+        //   });
+      })
+      .then(() => {
+        this.busyIndicator.hide();
       })
       .catch(err => {
         console.error('err', err);
+        this.busyIndicator.hide();
       });
   },
 
@@ -271,6 +311,8 @@ export default declare([BaseWidget], {
           const defaultOption = document.createElement('option');
           defaultOption.text = filter.firstOption;
           defaultOption.value = '';
+          defaultOption.selected = true;
+          // defaultOption.disabled = false;
           select.appendChild(defaultOption);
           newAffectedFilters.push(filter.filterAffected);
         }
@@ -316,9 +358,7 @@ export default declare([BaseWidget], {
     if (layerSelected) {
       this.groupSelected.layersForm.layers.forEach(layer => {
         if (layer.id === event.target.id) {
-          // layer.selected = true;
         } else {
-          // layer.selected = false;
           layer.layersId.forEach(layerId => {
             if (this.map.getLayer(layerId).visible & layerSelected.layersId[0] != layerId) {
               this.map.getLayer(layerId).setVisibility(false)
@@ -333,6 +373,21 @@ export default declare([BaseWidget], {
       });
       this.urlLayerSelected = this.map.getLayer(layerSelected.layersId[0]).url;
     }
+  },
+
+  manageWhere() {
+    let where = [];
+    this.groupSelected.filters.forEach(filter => {
+      const select = document.getElementById(filter.codeField);
+      // get value selected
+      const selectedIndex = select.selectedIndex;
+      if (selectedIndex > 0) {
+        // create where
+        const selectedValue = select.options[selectedIndex].value;
+        where.push(`(${filter.codeField} = '${selectedValue}')`);
+      };
+    });
+    return where.join(' AND ');
   },
 
 

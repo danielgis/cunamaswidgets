@@ -45,12 +45,26 @@
       },
       "filters": [
         {
+          "codeField": "unidad_territorial",
+          "nameField": "unidad_territorial",
+          "label": "Unidad Territorial",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 0,
+          "filterAffected": [
+            1
+          ],
+          "firstOption": "Seleccione la Unidad Territorial",
+          "startupData": true,
+          "isZoom": true
+        },
+        {
           "codeField": "iddep",
           "nameField": "departamento",
           "label": "Departamento",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
-          "index": 0,
+          "index": 1,
           "filterAffected": [
             1
           ],
@@ -64,12 +78,12 @@
           "label": "Provincia",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
-          "index": 1,
+          "index": 2,
           "filterAffected": [
             2
           ],
           "firstOption": "Seleccione la Provincia",
-          "startupData": false,
+          "startupData": true,
           "isZoom": true
         },
         {
@@ -78,12 +92,12 @@
           "label": "Distrito",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
-          "index": 2,
+          "index": 3,
           "filterAffected": [
             3
           ],
           "firstOption": "Seleccione el Distrito",
-          "startupData": false,
+          "startupData": true,
           "isZoom": true
         },
         {
@@ -92,10 +106,10 @@
           "label": "Centro poblado",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
-          "index": 3,
+          "index": 4,
           "filterAffected": [],
           "firstOption": "Seleccione el Centro Poblado",
-          "startupData": false,
+          "startupData": true,
           "isZoom": true
         }
       ]
