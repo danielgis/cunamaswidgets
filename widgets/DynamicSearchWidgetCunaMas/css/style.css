@@ -178,3 +178,9 @@ p {
 .radioItemContainerCs input {
   cursor: pointer;
 }
+
+
+.select2 {
+  width: 100% !important;
+  margin-bottom: 15px !important;
+}

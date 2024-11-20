@@ -7,11 +7,26 @@ import Query from "esri/tasks/query";
 import Deferred from "dojo/Deferred";
 import all from "dojo/promise/all";
 import BusyIndicator from 'esri/dijit/util/busyIndicator';
+import jquery from 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
+import select2 from 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js';
 // import StatisticDefinition from "esri/tasks/StatisticDefinition"
 
 const fontAwesome = document.createElement('script');
 fontAwesome.src = 'https://use.fontawesome.com/releases/v5.3.1/js/all.js';
 document.head.appendChild(fontAwesome);
+
+// add link an script
+// <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+const select2Css = document.createElement('link');
+select2Css.rel = 'stylesheet';
+select2Css.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css';
+document.head.appendChild(select2Css);
+
+// const select2Js = document.createElement('script');
+// select2Js.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js';
+// document.head.appendChild(select2Js);
 
 let isFirstLoad = false;
 
@@ -134,6 +149,9 @@ export default declare([BaseWidget], {
 
       const select = document.createElement('select');
       select.classList.add('comboBoxClsCs');
+      select.classList.add('form-control');
+      select.classList.add('js-example-tags');
+      // select.classList.add('select2');
       select.id = filter.codeField;
       if (filter.startupData) {
         const urlFilter = this.urlLayerSelected || filter.url;
@@ -147,9 +165,22 @@ export default declare([BaseWidget], {
           });
 
       };
-      select.addEventListener('change', (event) => this.onChangeFilterCs(event, index));
+      // select.select2({
+      //   tags: true,
+      //   onchange: this.onChangeFilterCs.bind(this)
+      // })
+      // select.addEventListener('change.select2', (event) => this.onChangeFilterCs(event, index));
+      // the same code as js vanilla with jquery
       this.containerBodyApCs.appendChild(select);
+      $(`#${filter.codeField}`).on('select2:select', (event) => this.onChangeFilterCs(event, index));
+      $(`#${filter.codeField}`).select2({
+        tags: true,
+        placeholder: filter.firstOption,
+        // allowClear: true
+      });
+
     });
+
   },
 
   getDataByFilter(url, fields, where = this.whereDefault, distinctValues = true) {
@@ -204,22 +235,29 @@ export default declare([BaseWidget], {
     let selectedValue = null;
     if (fixOptionSelected) {
       const selectedIndex = selectControl.selectedIndex;
-      if (selectedIndex > 0) {
+      if (selectedIndex > 1) {
         selectedValue = selectControl.options[selectedIndex].value;
       }
     }
     selectControl.innerHTML = '';
-    const defaultOption = document.createElement('option');
-    defaultOption.text = firstOption;
-    defaultOption.value = '';
-    defaultOption.selected = true;
-    // defaultOption.disabled = true;
-    selectControl.appendChild(defaultOption);
+    const phOption = document.createElement('option');
+    phOption.text = firstOption;
+    phOption.value = '';
+    selectControl.appendChild(phOption);
+
+    const restoreOption = document.createElement('option');
+    // restoreOption.text = firstOption;
+    restoreOption.text = 'Vacío';
+    restoreOption.value = '0';
+    restoreOption.selected = false;
+    // restoreOption.disabled = true;
+    selectControl.appendChild(restoreOption);
+
     options.forEach(option => {
       const optionElement = document.createElement('option');
       optionElement.value = option.attributes[valueField];
       optionElement.innerHTML = option.attributes[labelField];
-      if (selectedValue && selectedValue === option.attributes[valueField]) {
+      if (selectedValue && selectedValue.toString() === option.attributes[valueField].toString()) {
         optionElement.selected = true;
       }
       selectControl.appendChild(optionElement);
@@ -235,6 +273,13 @@ export default declare([BaseWidget], {
     const selectedIndex = evt.target.selectedIndex;
     const selectedValue = evt.target.options[selectedIndex].value;
     const currentFilter = this.groupSelected.filters[currentFilterIndex];
+
+    if (selectedValue === '0') {
+      // si se selecionar "vacio" con un value igual a 0; el select no debe tener ningun valor seleccionado
+      evt.currentTarget.value = '';
+      // evt.currentTarget.options[0].selected = true;
+      evt.currentTarget.dispatchEvent(new Event('change'));
+    };
 
     const fields = [currentFilter.codeField, currentFilter.nameField];
     // const where = `${currentFilter.codeField} = '${selectedValue}'`;
@@ -255,13 +300,14 @@ export default declare([BaseWidget], {
       })
       .then(() => {
         const promises = this.groupSelected.filters.map((filter, index) => {
-          const urlFilter = this.urlLayerSelected || filter.url;
-          const fieldsFilter = [filter.codeField, filter.nameField];
-          return this.getDataByFilter(urlFilter, fieldsFilter, where)
-            .then(data => {
-              this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
-            });
-          // }
+          if (evt.target.id !== filter.codeField) {
+            const urlFilter = this.urlLayerSelected || filter.url;
+            const fieldsFilter = [filter.codeField, filter.nameField];
+            return this.getDataByFilter(urlFilter, fieldsFilter, where)
+              .then(data => {
+                this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
+              });
+          }
         });
         return all(promises);
         // this.groupSelected.filters.forEach(filter => {
@@ -308,12 +354,17 @@ export default declare([BaseWidget], {
         if (filter.index === index) {
           const select = document.getElementById(filter.codeField);
           select.innerHTML = '';
-          const defaultOption = document.createElement('option');
-          defaultOption.text = filter.firstOption;
-          defaultOption.value = '';
-          defaultOption.selected = true;
-          // defaultOption.disabled = false;
-          select.appendChild(defaultOption);
+          const phOption = document.createElement('option');
+          phOption.text = filter.firstOption;
+          phOption.value = '';
+          select.appendChild(phOption);
+          const restoreOption = document.createElement('option');
+          // restoreOption.text = filter.firstOption;
+          restoreOption.text = 'Vacío';
+          restoreOption.value = '0';
+          restoreOption.selected = false;
+          // restoreOption.disabled = false;
+          select.appendChild(restoreOption);
           newAffectedFilters.push(filter.filterAffected);
         }
       });
@@ -381,7 +432,7 @@ export default declare([BaseWidget], {
       const select = document.getElementById(filter.codeField);
       // get value selected
       const selectedIndex = select.selectedIndex;
-      if (selectedIndex > 0) {
+      if (selectedIndex > 1) {
         // create where
         const selectedValue = select.options[selectedIndex].value;
         where.push(`(${filter.codeField} = '${selectedValue}')`);

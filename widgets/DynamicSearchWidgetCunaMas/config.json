@@ -111,6 +111,18 @@
           "firstOption": "Seleccione el Centro Poblado",
           "startupData": true,
           "isZoom": true
+        },
+        {
+          "codeField": "codigo_cg",
+          "nameField": "nombre_cg",
+          "label": "Comité de Gestión",
+          "type": "select",
+          "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
+          "index": 5,
+          "filterAffected": [],
+          "firstOption": "Seleccione el Comité de gestión",
+          "startupData": true,
+          "isZoom": true
         }
       ]
     },
