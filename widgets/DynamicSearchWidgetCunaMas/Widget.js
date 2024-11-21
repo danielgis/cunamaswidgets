@@ -347,31 +347,31 @@ export default declare([BaseWidget], {
       });
   },
 
-  resetSelectIndexArray(indexArray) {
-    const newAffectedFilters = [];
-    this.groupSelected.filters.forEach(filter => {
-      indexArray.forEach(index => {
-        if (filter.index === index) {
-          const select = document.getElementById(filter.codeField);
-          select.innerHTML = '';
-          const phOption = document.createElement('option');
-          phOption.text = filter.firstOption;
-          phOption.value = '';
-          select.appendChild(phOption);
-          const restoreOption = document.createElement('option');
-          // restoreOption.text = filter.firstOption;
-          restoreOption.text = 'Vacío';
-          restoreOption.value = '0';
-          restoreOption.selected = false;
-          // restoreOption.disabled = false;
-          select.appendChild(restoreOption);
-          newAffectedFilters.push(filter.filterAffected);
-        }
-      });
-    });
+  // resetSelectIndexArray(indexArray) {
+  //   const newAffectedFilters = [];
+  //   this.groupSelected.filters.forEach(filter => {
+  //     indexArray.forEach(index => {
+  //       if (filter.index === index) {
+  //         const select = document.getElementById(filter.codeField);
+  //         select.innerHTML = '';
+  //         const phOption = document.createElement('option');
+  //         phOption.text = filter.firstOption;
+  //         phOption.value = '';
+  //         select.appendChild(phOption);
+  //         const restoreOption = document.createElement('option');
+  //         // restoreOption.text = filter.firstOption;
+  //         restoreOption.text = 'Vacío';
+  //         restoreOption.value = '0';
+  //         restoreOption.selected = false;
+  //         // restoreOption.disabled = false;
+  //         select.appendChild(restoreOption);
+  //         newAffectedFilters.push(filter.filterAffected);
+  //       }
+  //     });
+  //   });
 
-    return newAffectedFilters.flat();
-  },
+  //   return newAffectedFilters.flat();
+  // },
 
   makeSelectorLayers(layers) {
     layers.sort((a, b) => a.index - b.index);
@@ -380,6 +380,7 @@ export default declare([BaseWidget], {
     let idSelected;
 
     layers.forEach(layer => {
+
       const radioItemContainer = document.createElement('div');
       radioItemContainer.classList.add('radioItemContainerCs');
       const input = document.createElement('input');
@@ -394,6 +395,10 @@ export default declare([BaseWidget], {
       label.for = layer.id;
       label.innerHTML = layer.label;
       radioItemContainer.appendChild(label);
+      if (!layer.visible) {
+        // display none
+        radioItemContainer.style.display = 'none';
+      }
       this.formRadioContainersApCs.appendChild(radioItemContainer);
     });
     dojo.query('.radioItemContainerCs input').on('click', this.handleRadioButtonClick.bind(this));
