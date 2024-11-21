@@ -300,7 +300,15 @@ export default declare([BaseWidget], {
       })
       .then(() => {
         const promises = this.groupSelected.filters.map((filter, index) => {
-          if (evt.target.id !== filter.codeField) {
+          if (selectedValue === '0') {
+            const urlFilter = this.urlLayerSelected || filter.url;
+            const fieldsFilter = [filter.codeField, filter.nameField];
+            return this.getDataByFilter(urlFilter, fieldsFilter, where)
+              .then(data => {
+                this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
+              });
+          }
+          else if (evt.target.id !== filter.codeField) {
             const urlFilter = this.urlLayerSelected || filter.url;
             const fieldsFilter = [filter.codeField, filter.nameField];
             return this.getDataByFilter(urlFilter, fieldsFilter, where)
@@ -443,6 +451,7 @@ export default declare([BaseWidget], {
         where.push(`(${filter.codeField} = '${selectedValue}')`);
       };
     });
+    // console.log('where', where.join(' AND '));
     return where.join(' AND ');
   },
 
