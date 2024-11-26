@@ -15,7 +15,7 @@
             "name": "CIAI",
             "label": "CIAI",
             "layersId": [
-              "cobertura_servicios_local_ciai_dev_654"
+              "cobertura_servicios_local_ciai_dev_2_9150"
             ],
             "selected": true,
             "id": "CIAI0",
@@ -26,7 +26,7 @@
             "name": "SA",
             "label": "SA",
             "layersId": [
-              "cobertura_servicios_local_sa_dev_8669"
+              "cobertura_servicios_local_sa_dev_2_7270"
             ],
             "selected": false,
             "id": "SA1",
@@ -37,8 +37,8 @@
             "name": "CIAISA",
             "label": "CIAI / SA",
             "layersId": [
-              "cobertura_servicios_local_ciai_dev_654",
-              "cobertura_servicios_local_sa_dev_8669"
+              "cobertura_servicios_local_ciai_dev_2_9150",
+              "cobertura_servicios_local_sa_dev_2_7270"
             ],
             "selected": false,
             "id": "CIAISA2",
@@ -49,7 +49,8 @@
             "name": "SAF",
             "label": "SAF",
             "layersId": [
-              "cobertura_servicios_vivienda_saf_dev_2_507"
+              "cobertura_servicios_vivienda_saf_dev_2_507",
+              "cobertura_servicios_vivienda_saf_dev_2_507_2727"
             ],
             "selected": false,
             "id": "SAF3",
@@ -70,8 +71,8 @@
           "isZoom": true
         },
         {
-          "codeField": "iddep",
-          "nameField": "departamento",
+          "codeField": "iddepa_local",
+          "nameField": "departamento_local",
           "label": "Departamento",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
@@ -81,8 +82,8 @@
           "isZoom": true
         },
         {
-          "codeField": "idprov",
-          "nameField": "provincia",
+          "codeField": "idprov_local",
+          "nameField": "provincia_local",
           "label": "Provincia",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
@@ -92,8 +93,8 @@
           "isZoom": true
         },
         {
-          "codeField": "ubigeo",
-          "nameField": "distrito",
+          "codeField": "ubigeo_local",
+          "nameField": "distrito_local",
           "label": "Distrito",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
@@ -103,8 +104,8 @@
           "isZoom": true
         },
         {
-          "codeField": "idccpp",
-          "nameField": "centro_poblado",
+          "codeField": "idccpp_local",
+          "nameField": "ccpp_local",
           "label": "Centro poblado",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
@@ -114,8 +115,8 @@
           "isZoom": true
         },
         {
-          "codeField": "codigo_cg",
-          "nameField": "nombre_cg",
+          "codeField": "cod_cg",
+          "nameField": "comite_gestion",
           "label": "Comité de Gestión",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_local_ciai_dev/FeatureServer/0",
@@ -141,7 +142,8 @@
             "name": "SAF",
             "label": "SAF",
             "layersId": [
-              "cobertura_servicios_vivienda_saf_dev_2_507"
+              "cobertura_servicios_vivienda_saf_dev_2_507",
+              "cobertura_servicios_vivienda_saf_dev_2_507_2727"
             ],
             "selected": true,
             "id": "SAF0",
@@ -152,7 +154,7 @@
             "name": "CIAI",
             "label": "CIAI",
             "layersId": [
-              "cobertura_servicios_local_ciai_dev_654"
+              "cobertura_servicios_local_ciai_dev_2_9150"
             ],
             "selected": false,
             "id": "CIAI1",
@@ -163,7 +165,7 @@
             "name": "SA",
             "label": "SA",
             "layersId": [
-              "cobertura_servicios_local_sa_dev_8669"
+              "cobertura_servicios_local_sa_dev_2_7270"
             ],
             "selected": false,
             "id": "SA2",
@@ -174,8 +176,8 @@
             "name": "CIAISA",
             "label": "CIAI / SA",
             "layersId": [
-              "cobertura_servicios_local_ciai_dev_654",
-              "cobertura_servicios_local_sa_dev_8669"
+              "cobertura_servicios_local_ciai_dev_2_9150",
+              "cobertura_servicios_local_sa_dev_2_7270"
             ],
             "selected": false,
             "id": "CIAISA3",
@@ -196,8 +198,8 @@
           "isZoom": true
         },
         {
-          "codeField": "iddep",
-          "nameField": "departamento",
+          "codeField": "familia_iddepa",
+          "nameField": "familia_departamento",
           "label": "Departamento",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_vivienda_saf_dev_2/FeatureServer/0",
@@ -207,8 +209,8 @@
           "isZoom": true
         },
         {
-          "codeField": "idprov",
-          "nameField": "provincia",
+          "codeField": "familia_idprov",
+          "nameField": "familia_provincia",
           "label": "Provincia",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_vivienda_saf_dev_2/FeatureServer/0",
@@ -218,8 +220,8 @@
           "isZoom": true
         },
         {
-          "codeField": "codigo_ubigeo",
-          "nameField": "distrito",
+          "codeField": "familia_ubigeo",
+          "nameField": "familia_distrito",
           "label": "Distrito",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_vivienda_saf_dev_2/FeatureServer/0",
@@ -229,8 +231,8 @@
           "isZoom": true
         },
         {
-          "codeField": "ccpp_familia",
-          "nameField": "nombre_ccpp",
+          "codeField": "familia_idccpp",
+          "nameField": "familia_ccpp",
           "label": "Centro poblado",
           "type": "select",
           "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_vivienda_saf_dev_2/FeatureServer/0",
