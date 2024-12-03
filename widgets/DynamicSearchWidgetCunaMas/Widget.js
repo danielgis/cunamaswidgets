@@ -7,26 +7,18 @@ import Query from "esri/tasks/query";
 import Deferred from "dojo/Deferred";
 import all from "dojo/promise/all";
 import BusyIndicator from 'esri/dijit/util/busyIndicator';
+import Message from "jimu/dijit/Message";
 import jquery from 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
 import select2 from 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js';
-// import StatisticDefinition from "esri/tasks/StatisticDefinition"
 
 const fontAwesome = document.createElement('script');
 fontAwesome.src = 'https://use.fontawesome.com/releases/v5.3.1/js/all.js';
 document.head.appendChild(fontAwesome);
 
-// add link an script
-// <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-
 const select2Css = document.createElement('link');
 select2Css.rel = 'stylesheet';
 select2Css.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css';
 document.head.appendChild(select2Css);
-
-// const select2Js = document.createElement('script');
-// select2Js.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js';
-// document.head.appendChild(select2Js);
 
 let isFirstLoad = false;
 
@@ -46,6 +38,15 @@ export default declare([BaseWidget], {
   postCreate() {
     this.inherited(arguments);
     this.map.on("update-end", this.executeZoomExtentInitial.bind(this));
+  },
+
+  showMessageCs(message, type = 'message') {
+    const title = `${this.nls.widgetTitle}`;
+    new Message({
+      type: type,
+      titleLabel: title,
+      message: message,
+    });
   },
 
   onClickGroup(evt) {
@@ -82,9 +83,14 @@ export default declare([BaseWidget], {
     if (isFirstLoad) {
       return;
     }
+    this.executeHomeExtent();
+    // const homeWidget = WidgetManager.getInstance().getWidgetsByName("HomeButton");
+    // this.map.setExtent(homeWidget[0].homeDijit.extent);
+    isFirstLoad = true;
+  },
+  executeHomeExtent() {
     const homeWidget = WidgetManager.getInstance().getWidgetsByName("HomeButton");
     this.map.setExtent(homeWidget[0].homeDijit.extent);
-    isFirstLoad = true;
   },
 
   buildMainMenuCs() {
@@ -138,9 +144,18 @@ export default declare([BaseWidget], {
   },
 
   buildFormSearchCs() {
+    this.busyIndicator.show();
     const filters = this.groupSelected.filters;
     filters.sort((a, b) => a.index - b.index);
     this.containerBodyApCs.innerHTML = '';
+
+    const labelReset = document.createElement('p');
+    labelReset.classList.add('resetFilterClsCs');
+    labelReset.innerHTML = this.nls.restoreLabelCs;
+    this.containerBodyApCs.appendChild(labelReset);
+
+    labelReset.addEventListener('click', this.resetAllOpionSelected.bind(this));
+
     filters.forEach((filter, index) => {
       const label = document.createElement('p');
       label.classList.add('labelComboBoxClsCs');
@@ -158,29 +173,29 @@ export default declare([BaseWidget], {
         const fieldsFilter = [filter.codeField, filter.nameField];
         this.getDataByFilter(urlFilter, fieldsFilter)
           .then(response => {
-            this.makeOptionCs(response.features, select, filter.codeField, filter.nameField, filter.firstOption);
+            if (response.features.length === 1000) {
+              // disable select
+              $(`#${filter.codeField}`).prop("disabled", true);
+            } else {
+              $(`#${filter.codeField}`).prop("disabled", false);
+              this.makeOptionCs(response.features, select, filter.codeField, filter.nameField, filter.firstOption);
+            }
           })
           .catch(err => {
             console.error('err', err);
           });
 
       };
-      // select.select2({
-      //   tags: true,
-      //   onchange: this.onChangeFilterCs.bind(this)
-      // })
-      // select.addEventListener('change.select2', (event) => this.onChangeFilterCs(event, index));
-      // the same code as js vanilla with jquery
       this.containerBodyApCs.appendChild(select);
       $(`#${filter.codeField}`).on('select2:select', (event) => this.onChangeFilterCs(event, index));
+      // $(`#${filter.codeField}`).on('select2:clear', (event) => this.onChangeFilterCs(event, index));
       $(`#${filter.codeField}`).select2({
         tags: true,
         placeholder: filter.firstOption,
         // allowClear: true
       });
-
     });
-
+    this.busyIndicator.hide();
   },
 
   getDataByFilter(url, fields, where = this.whereDefault, distinctValues = true) {
@@ -203,7 +218,7 @@ export default declare([BaseWidget], {
     return deferred.promise;
   },
 
-  setExtentByFilter(url, where) {
+  setExtentByFilter(url, where, expand = 1.1) {
     const self = this;
     const deferred = new Deferred();
     const queryTask = new QueryTask(url);
@@ -213,7 +228,7 @@ export default declare([BaseWidget], {
 
     queryTask.executeForExtent(query)
       .then(response => {
-        self.map.setExtent(response.extent.expand(1.1), true);
+        self.map.setExtent(response.extent.expand(expand), true);
         deferred.resolve(response);
       })
       .catch(err => {
@@ -287,25 +302,55 @@ export default declare([BaseWidget], {
     let responseFilter;
 
     const url = this.urlLayerSelected || currentFilter.url;
+    const layersSelected = this.layersSelected;
+
+    const webmap = this.map;
+
     return this.getDataByFilter(url, fields, where, false)
       .then((response) => {
         responseFilter = response;
-        if (!currentFilter.isZoom) {
+        if (!currentFilter.isZoom && !currentFilter.anotherZoom) {
           return null;
         }
-        if (responseFilter.features.length === 1 && responseFilter.features[0].geometry.type === 'point') {
-          return this.map.centerAndZoom(responseFilter.features[0].geometry, 17);
-        }
-        return this.setExtentByFilter(url, where);
+        if (currentFilter.isZoom) {
+          if (responseFilter.features.length === 1 && responseFilter.features[0].geometry.type === 'point') {
+            return this.map.centerAndZoom(responseFilter.features[0].geometry, 17);
+          }
+          if (responseFilter.features.length === 0) {
+            throw new Error(`No se encontraron resultados de ${this.labelLayerSelected} en esta ubicación`);
+            // console.log("No se encontraron resultados");
+            // return;
+          }
+          return this.setExtentByFilter(url, where);
+        };
+        if (currentFilter.anotherZoom) {
+          const whereLimit = this.manageWhereLimits();
+          webmap.getLayer(currentFilter.anotherZoom.idLayer).setDefinitionExpression(whereLimit)
+          // if (selectedValue === '0') {
+          //   return;
+          // };
+          // const whereAnother = `${currentFilter.anotherZoom.field} = '${selectedValue}'`;
+          return this.setExtentByFilter(currentFilter.anotherZoom.url, whereLimit, expand = 1);
+        };
       })
       .then(() => {
+        if (responseFilter.features.length === 0) {
+          return;
+        }
         const promises = this.groupSelected.filters.map((filter, index) => {
           if (selectedValue === '0') {
             const urlFilter = this.urlLayerSelected || filter.url;
             const fieldsFilter = [filter.codeField, filter.nameField];
             return this.getDataByFilter(urlFilter, fieldsFilter, where)
               .then(data => {
-                this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
+                if (data.features.length === 1000) {
+                  // disable select
+                  $(`#${filter.codeField}`).prop("disabled", true);
+                } else {
+                  $(`#${filter.codeField}`).prop("disabled", false);
+                  this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
+                }
+
               });
           }
           else if (evt.target.id !== filter.codeField) {
@@ -313,7 +358,13 @@ export default declare([BaseWidget], {
             const fieldsFilter = [filter.codeField, filter.nameField];
             return this.getDataByFilter(urlFilter, fieldsFilter, where)
               .then(data => {
-                this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
+                if (data.features.length === 1000) {
+                  // disable select
+                  $(`#${filter.codeField}`).prop("disabled", true);
+                } else {
+                  $(`#${filter.codeField}`).prop("disabled", false);
+                  this.makeOptionCs(data.features, document.getElementById(filter.codeField), filter.codeField, filter.nameField, filter.firstOption);
+                }
               });
           }
         });
@@ -347,10 +398,27 @@ export default declare([BaseWidget], {
         //   });
       })
       .then(() => {
+        layersSelected.layersId.forEach(layer => {
+          // console.log('layer', layer);
+          // search fields in where, but not set definition expression
+          const verifyFields = webmap.getLayer(layer).fields.filter(field => {
+            if (where.includes(field.name)) {
+              return field.name;
+            };
+
+          });
+
+          if (verifyFields.length === 0) {
+            return;
+          }
+          webmap.getLayer(layer).setDefinitionExpression(where);
+        });
+        // return all(promises);
         this.busyIndicator.hide();
       })
       .catch(err => {
-        console.error('err', err);
+        this.showMessageCs(err.message, 'error');
+        // console.error('err', err);
         this.busyIndicator.hide();
       });
   },
@@ -380,6 +448,22 @@ export default declare([BaseWidget], {
 
   //   return newAffectedFilters.flat();
   // },
+
+  getCountByWhere(ulr, where) {
+    const deferred = new Deferred();
+    const queryTask = new QueryTask(ulr);
+    const query = new Query();
+    query.where = where;
+    query.returnGeometry = false;
+    queryTask.executeForCount(query)
+      .then(response => {
+        deferred.resolve(response);
+      })
+      .catch(err => {
+        deferred.reject(err);
+      });
+    return deferred.promise;
+  },
 
   makeSelectorLayers(layers) {
     layers.sort((a, b) => a.index - b.index);
@@ -419,6 +503,7 @@ export default declare([BaseWidget], {
 
   handleRadioButtonClick(event) {
     const layerSelected = this.groupSelected.layersForm.layers.find(layer => layer.id === event.target.id);
+    this.layersSelected = layerSelected;
     if (layerSelected) {
       this.groupSelected.layersForm.layers.forEach(layer => {
         if (layer.id === event.target.id) {
@@ -435,7 +520,9 @@ export default declare([BaseWidget], {
           this.map.getLayer(layerId).setVisibility(true);
         };
       });
+
       this.urlLayerSelected = this.map.getLayer(layerSelected.layersId[0]).url;
+      this.labelLayerSelected = layerSelected.label;
     }
   },
 
@@ -455,7 +542,38 @@ export default declare([BaseWidget], {
     return where.join(' AND ');
   },
 
+  manageWhereLimits() {
+    let where = [];
+    this.groupSelected.filters.forEach(filter => {
+      if (filter.anotherZoom) {
+        const select = document.getElementById(filter.codeField);
+        // get value selected
+        const selectedIndex = select.selectedIndex;
+        if (selectedIndex > 1) {
+          // create where
+          const selectedValue = select.options[selectedIndex].value;
+          where.push(`(${filter.anotherZoom.field} = '${selectedValue}')`);
+        };
+      }
+    });
 
+    if (where.length === 0) {
+      return this.whereDefault;
+    };
+    // console.log('where', where.join(' AND '));
+    return where.join(' AND ');
+  },
+
+  resetAllOpionSelected(evt) {
+    // execute buildFormSearchCs
+    // this.busyIndicator.show();
+
+    this.buildFormSearchCs();
+    this.layersSelected.layersId.forEach(layerId => {
+      this.map.getLayer(layerId).setDefinitionExpression(this.whereDefault);
+    });
+    this.executeHomeExtent();
+  },
 
   // onClose(){
   //   console.log('DynamicSearchWidgetCunaMas::onClose');

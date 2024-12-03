@@ -50,7 +50,8 @@
             "label": "SAF",
             "layersId": [
               "cobertura_servicios_vivienda_saf_dev_2_507",
-              "cobertura_servicios_vivienda_saf_dev_2_507_2727"
+              "cobertura_servicios_vivienda_saf_grid_20k_dev_3_5070",
+              "cobertura_servicios_vivienda_saf_grid_10k_dev_3_4373"
             ],
             "selected": false,
             "id": "SAF3",
@@ -79,7 +80,12 @@
           "index": 1,
           "firstOption": "Seleccione el Departamento",
           "startupData": true,
-          "isZoom": true
+          "isZoom": false,
+          "anotherZoom": {
+            "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_limites/FeatureServer/0",
+            "field": "iddepa",
+            "idLayer": "cobertura_servicios_limites_6689"
+          }
         },
         {
           "codeField": "idprov_local",
@@ -90,7 +96,12 @@
           "index": 2,
           "firstOption": "Seleccione la Provincia",
           "startupData": true,
-          "isZoom": true
+          "isZoom": false,
+          "anotherZoom": {
+            "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_limites/FeatureServer/0",
+            "field": "idprov",
+            "idLayer": "cobertura_servicios_limites_6689"
+          }
         },
         {
           "codeField": "ubigeo_local",
@@ -101,7 +112,12 @@
           "index": 3,
           "firstOption": "Seleccione el Distrito",
           "startupData": true,
-          "isZoom": true
+          "isZoom": false,
+          "anotherZoom": {
+            "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_limites/FeatureServer/0",
+            "field": "iddist",
+            "idLayer": "cobertura_servicios_limites_6689"
+          }
         },
         {
           "codeField": "idccpp_local",
@@ -143,7 +159,8 @@
             "label": "SAF",
             "layersId": [
               "cobertura_servicios_vivienda_saf_dev_2_507",
-              "cobertura_servicios_vivienda_saf_dev_2_507_2727"
+              "cobertura_servicios_vivienda_saf_grid_20k_dev_3_5070",
+              "cobertura_servicios_vivienda_saf_grid_10k_dev_3_4373"
             ],
             "selected": true,
             "id": "SAF0",
@@ -206,7 +223,12 @@
           "index": 1,
           "firstOption": "Seleccione el Departamento",
           "startupData": true,
-          "isZoom": true
+          "isZoom": false,
+          "anotherZoom": {
+            "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_limites/FeatureServer/0",
+            "field": "iddepa",
+            "idLayer": "cobertura_servicios_limites_6689"
+          }
         },
         {
           "codeField": "familia_idprov",
@@ -217,7 +239,12 @@
           "index": 2,
           "firstOption": "Seleccione la Provincia",
           "startupData": true,
-          "isZoom": true
+          "isZoom": false,
+          "anotherZoom": {
+            "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_limites/FeatureServer/0",
+            "field": "idprov",
+            "idLayer": "cobertura_servicios_limites_6689"
+          }
         },
         {
           "codeField": "familia_ubigeo",
@@ -228,7 +255,12 @@
           "index": 3,
           "firstOption": "Seleccione el Distrito",
           "startupData": true,
-          "isZoom": true
+          "isZoom": false,
+          "anotherZoom": {
+            "url": "https://geosisfoh.midis.gob.pe/server/rest/services/Hosted/cobertura_servicios_limites/FeatureServer/0",
+            "field": "iddist",
+            "idLayer": "cobertura_servicios_limites_6689"
+          }
         },
         {
           "codeField": "familia_idccpp",
